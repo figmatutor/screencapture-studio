@@ -14,6 +14,11 @@
 - 최적화된 리소스 로딩으로 빠른 처리
 - 실시간 진행상황 모니터링
 
+### 📋 **클립보드 복사 기능**
+- 웹페이지를 직접 클립보드에 복사
+- Figma에서 Ctrl+V (⌘+V)로 바로 붙여넣기
+- 고화질 PNG 형태로 시스템 클립보드 저장
+
 ### 📦 **다양한 내보내기**
 - ZIP 파일로 모든 이미지 일괄 다운로드
 - PDF 형태로 플로우차트 생성
@@ -39,6 +44,7 @@
 - **Node.js** + **Express.js** - 서버 프레임워크
 - **Puppeteer** - 헤드리스 브라우저 자동화
 - **Sharp** - 고성능 이미지 처리
+- **Clipboardy** - 시스템 클립보드 통합
 - **WebDriverIO** + **Appium** - 모바일 앱 캡처
 
 ### **Frontend**
@@ -63,24 +69,28 @@ node server.js
 1. http://localhost:3000 접속
 2. 캡처할 웹사이트 URL 입력
 3. 화살표 버튼 클릭 또는 Enter
-4. 완료 후 ZIP 파일 다운로드
+4. 완료 후 ZIP 파일 다운로드 또는 클립보드 복사
 
 ## 📁 프로젝트 구조
 
 ```
 Screencapture studio/
-├── server.js                 # 메인 서버 파일
+├── server.js                   # 메인 서버 파일
 ├── public/
-│   └── index.html            # 프론트엔드 UI
+│   └── index.html              # 프론트엔드 UI
 ├── server/
-│   ├── routes/               # API 라우트
-│   └── models/               # 데이터 모델
+│   ├── routes/                 # API 라우트
+│   │   ├── clipboard.js        # 클립보드 복사 API
+│   │   ├── crawl.js            # 웹 크롤링 API
+│   │   └── export.js           # 내보내기 API
+│   └── models/                 # 데이터 모델
 ├── services/
-│   ├── FlowCrawler.js        # 웹 크롤링 엔진
-│   ├── AppStoreCrawler.js    # 앱스토어 크롤러
-│   └── MobileFlowCapturer.js # 모바일 캡처
-├── screenshots/              # 캡처된 이미지
-└── exports/                  # 내보내기 파일
+│   ├── FlowCrawler.js          # 웹 크롤링 엔진
+│   ├── ClipboardCapturer.js    # 클립보드 캡처 서비스
+│   ├── AppStoreCrawler.js      # 앱스토어 크롤러
+│   └── MobileFlowCapturer.js   # 모바일 캡처
+├── screenshots/                # 캡처된 이미지
+└── exports/                    # 내보내기 파일
 ```
 
 ## 🎯 핵심 특징
@@ -94,7 +104,7 @@ Screencapture studio/
 ### **사용자 경험**
 - 원클릭 캡처 시작
 - 실시간 진행상황 표시
-- 완료 시 즉시 다운로드
+- 완료 시 즉시 다운로드 또는 클립보드 복사
 - 직관적인 인터페이스
 
 ### **확장성**
@@ -112,7 +122,7 @@ Screencapture studio/
 
 ### 완료 화면  
 - "플로우 캡쳐 완료!" 메시지
-- 다시 캡쳐하기 / 다운받기 버튼
+- 다시 캡쳐하기 / 클립보드 복사 / 다운받기 버튼
 - 캡처 통계 정보
 
 ## 📄 라이선스
