@@ -22,6 +22,7 @@ app.use('/api/crawl', require('./server/routes/crawl'));
 app.use('/api/app', require('./server/routes/app'));
 app.use('/api/mobile', require('./server/routes/mobile'));
 app.use('/api/export', require('./server/routes/export'));
+app.use('/api/clipboard', require('./server/routes/clipboard'));
 
 // 헬스 체크
 app.get('/api/health', (req, res) => {

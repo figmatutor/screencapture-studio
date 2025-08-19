@@ -19,7 +19,9 @@
     "adb-tools": "^1.0.0",
     "appium": "^2.0.0",
     "archiver": "^6.0.1",
+    "canvas": "^3.2.0",
     "cheerio": "^1.0.0-rc.12",
+    "clipboardy": "^4.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "fontkit": "^1.8.1",
@@ -28,7 +30,7 @@
     "path": "^0.12.7",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^19.11.1",
-    "sharp": "^0.33.0",
+    "sharp": "^0.33.5",
     "url-parse": "^1.5.10",
     "webdriverio": "^8.25.0"
   }

@@ -6,6 +6,26 @@
     <title>플로우 스크린샷 - 한 번의 클릭으로 서비스 전체를 담다</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" rel="stylesheet">
+    
+    <!-- 글로벌 에러 핸들러 -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('🚨 전역 JavaScript 오류:', {
+                message: e.message,
+                filename: e.filename,
+                lineno: e.lineno,
+                colno: e.colno,
+                error: e.error
+            });
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('🚨 Unhandled Promise Rejection:', e.reason);
+        });
+        
+        console.log('🛡️ 글로벌 에러 핸들러 설정 완료');
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -40,7 +60,6 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 42px;
             font-weight: 700;
-            margin-bottom: 16px;
             color: #1a1a1a;
             display: flex;
             align-items: center;
@@ -923,8 +942,8 @@
         <div id="demoResult" style="margin-top: 40px; display: none; width: 100%; max-width: 600px;"></div>
     </main>
 
-    <!-- 푸터 -->
-    <footer class="footer">
+    <!-- 푸터 (숨김) -->
+    <footer class="footer" style="display: none;">
         <div>Figma Pedia</div>
         <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
     </footer>
@@ -972,18 +991,24 @@
                     </div>
                         
                         <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px;">
-                            <button id="demoBtn" 
-                                    style="flex: 1; min-width: 200px; padding: 16px 24px; background: #295bff; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
+                                                        <button id="demoBtn" 
+                                    style="flex: 1; min-width: 140px; padding: 16px 20px; background: #295bff; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease;"
                                     onmouseover="this.style.background='#1e4ee6'; this.style.transform='translateY(-2px)'"
                                     onmouseout="this.style.background='#295bff'; this.style.transform='translateY(0)'">
-                        플로우 캡처 시작하기
-                    </button>
-                            <button id="fastDemoBtn" 
-                                    style="flex: 1; min-width: 200px; padding: 16px 24px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
-                                    onmouseover="this.style.background='#d97706'; this.style.transform='translateY(-2px)'"
-                                    onmouseout="this.style.background='#f59e0b'; this.style.transform='translateY(0)'">
-                                ⚡ 빠른 캡처
+                                플로우 캡처 시작하기
                             </button>
+                                                    <button id="fastDemoBtn" 
+                                style="flex: 1; min-width: 140px; padding: 16px 20px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='#d97706'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#f59e0b'; this.style.transform='translateY(0)'">
+                            ⚡ 빠른 캡처
+                        </button>
+                        <button onclick="copyUrlToClipboard()" 
+                                style="flex: 1; min-width: 140px; padding: 16px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='#059669'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#10b981'; this.style.transform='translateY(0)'">
+                            📋 클립보드 복사
+                        </button>
                         </div>
                         
                     <div id="demoResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box;"></div>
@@ -993,7 +1018,7 @@
                     <div id="appTab" class="tab-content" style="display: none; visibility: hidden;">
                         <div class="form-group">
                             <label class="form-label">앱스토어 URL</label>
-                            <input type="url" class="form-input" placeholder="https://apps.apple.com/... 또는 https://play.google.com/..." id="appStoreInput">
+                            <input type="url" class="form-input" placeholder="https://apps.apple.com/... 또는 https://play.google.com/..." id="appStoreInput" value="https://apps.apple.com/kr/app/figma/id1152747299">
                             <small style="color: #6b7280; font-size: 14px; margin-top: 5px; display: block;">Apple App Store 또는 Google Play Store URL을 입력하세요</small>
                         </div>
                         
@@ -1009,7 +1034,7 @@
                             📱 앱 스크린샷 수집하기
                         </button>
                         
-                        <div id="appDemoResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box;"></div>
+                        <div id="appDemoResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box; z-index: 100; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"></div>
                     </div>
                     
                     <!-- 모바일 플로우 캡처 탭 -->
@@ -1154,7 +1179,7 @@
         </div>
     </main>
 
-    <footer class="footer">
+    <footer class="footer" style="display: none;">
         <div class="container">
             <p>&copy; 2024 플로우 스크린샷. 모든 권리 보유.</p>
             <p>한 번의 클릭으로 서비스 전체를 담다</p>
@@ -1396,8 +1421,8 @@
                     </p>
                 </main>
 
-                <!-- 푸터 -->
-                <footer style="position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
+                <!-- 푸터 (숨김) -->
+                <footer style="display: none; position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
                     <div>Figma Pedia</div>
                     <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
                 </footer>
@@ -1506,6 +1531,11 @@
         }
 
         function showDemoSuccess(crawlResult, jobId) {
+            // 캡처된 첫 번째 URL 가져오기
+            const capturedUrl = crawlResult.screenshots && crawlResult.screenshots[0] 
+                ? crawlResult.screenshots[0].url 
+                : window.location.origin;
+            
             // 전체 화면을 새로운 완료 화면으로 교체
             document.body.innerHTML = `
                 <!-- GNB -->
@@ -1523,18 +1553,24 @@
                         플로우 캡쳐 완료!
                     </h1>
                     <p style="font-family: 'Pretendard', sans-serif; font-weight: 400; font-size: 20px; line-height: 1.5; color: rgba(255, 255, 255, 0.7); margin-bottom: 48px;">
-                        다운로드 버튼을 누르시면 전체 이미지를 받으실 수 있어요!
+                        다운로드하거나 Figma에 바로 붙여넣을 수 있어요!
                     </p>
                     
-                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                         <button onclick="window.location.href='/'" 
-                                style="padding: 16px 32px; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                style="padding: 16px 24px; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
                                 onmouseover="this.style.borderColor='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.1)'"
                                 onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='transparent'">
                             다시 캡쳐하기
                         </button>
+                        <button onclick="copyToClipboard('${capturedUrl}')" 
+                                style="padding: 16px 24px; background: #10b981; color: white; border: none; border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='#059669'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#10b981'; this.style.transform='translateY(0)'">
+                            📋 클립보드 복사
+                        </button>
                         <button onclick="window.location.href='/api/export/zip/${jobId}'" 
-                                style="padding: 16px 32px; background: #295bff; color: white; border: none; border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                style="padding: 16px 24px; background: #295bff; color: white; border: none; border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
                                 onmouseover="this.style.background='#1e4ee6'; this.style.transform='translateY(-2px)'"
                                 onmouseout="this.style.background='#295bff'; this.style.transform='translateY(0)'">
                             다운받기
@@ -1546,11 +1582,55 @@
                     </p>
                 </main>
 
-                <!-- 푸터 -->
-                <footer style="position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
+                <!-- 푸터 (숨김) -->
+                <footer style="display: none; position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
                     <div>Figma Pedia</div>
                     <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
                 </footer>
+
+                <scr` + `ipt>
+                    // 클립보드 복사 함수를 새로운 페이지에 다시 정의
+                    async function copyToClipboard(url) {
+                        const copyBtn = event.target;
+                        const originalText = copyBtn.textContent;
+                        
+                        try {
+                            copyBtn.disabled = true;
+                            copyBtn.textContent = '📋 복사 중...';
+                            copyBtn.style.background = '#6b7280';
+                            
+                            const response = await fetch('/api/clipboard/capture', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ url: url })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                                copyBtn.textContent = '✅ 복사 완료!';
+                                copyBtn.style.background = '#10b981';
+                                alert('스크린샷이 클립보드에 복사되었습니다!\\nFigma에서 Ctrl+V (⌘+V)로 붙여넣을 수 있습니다.');
+                                setTimeout(() => {
+                                    copyBtn.textContent = originalText;
+                                    copyBtn.style.background = '#10b981';
+                                    copyBtn.disabled = false;
+                                }, 3000);
+                            } else {
+                                throw new Error(result.error || '복사 실패');
+                            }
+                        } catch (error) {
+                            copyBtn.textContent = '❌ 복사 실패';
+                            copyBtn.style.background = '#ef4444';
+                            alert('클립보드 복사에 실패했습니다:\\n' + error.message);
+                            setTimeout(() => {
+                                copyBtn.textContent = originalText;
+                                copyBtn.style.background = '#10b981';
+                                copyBtn.disabled = false;
+                            }, 3000);
+                        }
+                    }
+                </scr' + 'ipt>
             `;
         }
 
@@ -1568,6 +1648,8 @@
         function ensureProperPosition(element) {
             if (!element) return;
             
+            console.log('🔧 ensureProperPosition 실행:', element.id);
+            
             // 모든 가능한 위치 스타일 리셋
             element.style.position = 'relative';
             element.style.width = '100%';
@@ -1581,8 +1663,13 @@
             element.style.marginRight = '0';
             element.style.float = 'none';
             element.style.clear = 'both';
-            element.style.zIndex = '1';
+            element.style.zIndex = '100';
             element.style.boxSizing = 'border-box';
+            element.style.background = 'white';
+            element.style.borderRadius = '12px';
+            element.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            element.style.padding = '20px';
+            element.style.marginTop = '20px';
             
             // 부모 컨테이너 확인
             const parent = element.parentElement;
@@ -1591,7 +1678,81 @@
                 parent.style.overflow = 'visible';
             }
             
-            console.log('UI 위치 강제 고정 완료:', element.id);
+            console.log('✅ UI 위치 강제 고정 완료:', element.id);
+        }
+
+        // 클립보드 복사 함수
+        async function copyToClipboard(url) {
+            const copyBtn = event.target;
+            const originalText = copyBtn.textContent;
+            
+            try {
+                copyBtn.disabled = true;
+                copyBtn.textContent = '📋 복사 중...';
+                copyBtn.style.background = '#6b7280';
+                
+                console.log('📋 클립보드 복사 시작:', url);
+                
+                const response = await fetch('/api/clipboard/capture', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    copyBtn.textContent = '✅ 복사 완료!';
+                    copyBtn.style.background = '#10b981';
+                    
+                    // 성공 알림
+                    alert('스크린샷이 클립보드에 복사되었습니다!\nFigma에서 Ctrl+V (⌘+V)로 붙여넣을 수 있습니다.');
+                    
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.background = '#10b981';
+                        copyBtn.disabled = false;
+                    }, 3000);
+                } else {
+                    throw new Error(result.error || '복사 실패');
+                }
+                
+            } catch (error) {
+                console.error('클립보드 복사 오류:', error);
+                copyBtn.textContent = '❌ 복사 실패';
+                copyBtn.style.background = '#ef4444';
+                
+                alert('클립보드 복사에 실패했습니다:\\n' + error.message);
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = '#10b981';
+                    copyBtn.disabled = false;
+                }, 3000);
+            }
+        }
+
+        // 단일 URL 클립보드 복사 함수
+        async function copyUrlToClipboard() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('URL을 입력해주세요.');
+                return;
+            }
+            
+            // URL 유효성 검사
+            try {
+                new URL(url);
+            } catch (e) {
+                alert('올바른 URL을 입력해주세요. (예: https://example.com)');
+                return;
+            }
+            
+            await copyToClipboard(url);
         }
 
         // 페이지 로드 시 초기화 및 이벤트 리스너 등록
@@ -1758,9 +1919,13 @@
 
         // 앱 크롤링 시작
         async function startAppDemo() {
+            console.log('🚀 startAppDemo 함수 호출됨');
+            
             const appStoreUrl = document.getElementById('appStoreInput').value.trim();
             const btn = document.getElementById('appDemoBtn');
             const result = document.getElementById('appDemoResult');
+            
+            console.log('📝 입력값 확인:', { appStoreUrl, btn: !!btn, result: !!result });
             
             if (!appStoreUrl) {
                 alert('앱스토어 URL을 입력해주세요.');
@@ -1808,12 +1973,15 @@
                     })
                 });
 
+                console.log('📡 API 응답 상태:', response.status, response.statusText);
                 const data = await response.json();
+                console.log('📡 API 응답 데이터:', data);
                 
                 if (data.success) {
-                    console.log('앱 크롤링 시작:', data.jobId);
+                    console.log('✅ 앱 크롤링 시작 성공:', data.jobId);
                     monitorAppCrawling(data.jobId);
                 } else {
+                    console.log('❌ 앱 크롤링 시작 실패:', data.error);
                     showAppDemoError('크롤링 시작 실패', data.error || '알 수 없는 오류가 발생했습니다.');
                     resetAppDemoButton(btn);
                 }
@@ -1826,23 +1994,31 @@
 
         // 앱 크롤링 모니터링
         async function monitorAppCrawling(jobId) {
+            console.log('🔍 앱 크롤링 모니터링 시작:', jobId);
+            
             const checkStatus = async () => {
                 try {
+                    console.log('📊 상태 확인 요청:', `/api/app/status/${jobId}`);
                     const response = await fetch(`/api/app/status/${jobId}`);
                     const data = await response.json();
+                    console.log('📊 상태 응답:', data);
                     
                     if (data.success) {
                         const job = data.job;
                         
                         if (job.status === 'completed') {
+                            console.log('🎉 작업 완료! 결과 조회 시작');
                             // 결과 조회
                             const resultResponse = await fetch(`/api/app/result/${jobId}`);
                             const resultData = await resultResponse.json();
+                            console.log('📋 결과 데이터:', resultData);
                             
                             if (resultData.success) {
+                                console.log('✅ 결과 조회 성공, showAppDemoSuccess 호출');
                                 showAppDemoSuccess(resultData.result, jobId);
                                 resetAppDemoButton(document.getElementById('appDemoBtn'));
                             } else {
+                                console.log('❌ 결과 조회 실패:', resultData.error);
                                 showAppDemoError('결과 조회 실패', resultData.error);
                                 resetAppDemoButton(document.getElementById('appDemoBtn'));
                             }
@@ -1918,16 +2094,32 @@
 
         // 앱 크롤링 성공 결과 표시
         function showAppDemoSuccess(crawlResult, jobId) {
-            const result = document.getElementById('appDemoResult');
+            console.log('🎊 showAppDemoSuccess 호출됨');
+            console.log('📊 crawlResult:', crawlResult);
+            console.log('🔑 jobId:', jobId);
             
+            const result = document.getElementById('appDemoResult');
+            console.log('🎯 result 요소:', result);
+            
+            if (!result) {
+                console.error('❌ appDemoResult 요소를 찾을 수 없습니다!');
+                return;
+            }
+            
+            console.log('🔧 ensureProperPosition 호출');
             ensureProperPosition(result);
             
+            console.log('👁️ 요소 표시 설정');
             result.style.display = 'block';
             result.className = 'demo-result-container demo-result-active';
             
             const appInfo = crawlResult.appInfo || {};
             const screenshots = crawlResult.screenshots || [];
             
+            console.log('📱 앱 정보:', appInfo);
+            console.log('📸 스크린샷:', screenshots);
+            
+            console.log('📝 HTML 콘텐츠 설정 시작');
             result.innerHTML = `
                 <div class="demo-status-card success">
                     <strong>✅ 앱 스크린샷 수집 완료!</strong><br>
@@ -1946,6 +2138,13 @@
                     </div>
                 </div>
             `;
+            
+            console.log('✅ HTML 콘텐츠 설정 완료');
+            console.log('🎯 최종 result 상태:', {
+                display: result.style.display,
+                className: result.className,
+                innerHTML: result.innerHTML.length + ' characters'
+            });
         }
 
         // 앱 크롤링 버튼 리셋
@@ -2198,6 +2397,40 @@
             btn.disabled = false;
             btn.textContent = '🎬 앱 플로우 캡처 시작하기';
         }
+        
+        // JavaScript 로딩 완료 확인
+        console.log('✅ JavaScript 전체 로딩 완료 - 모든 함수 정의됨');
+        console.log('📊 정의된 함수들:', {
+            startDemo: typeof startDemo,
+            startFastDemo: typeof startFastDemo,
+            startAppDemo: typeof startAppDemo,
+            startMobileFlowCapture: typeof startMobileFlowCapture,
+            copyToClipboard: typeof copyToClipboard,
+            copyUrlToClipboard: typeof copyUrlToClipboard
+        });
+        
+        // 스크립트 완전성 검증
+        function validateScriptIntegrity() {
+            const requiredFunctions = [
+                'startDemo', 'startFastDemo', 'startAppDemo', 
+                'startMobileFlowCapture', 'copyToClipboard', 'copyUrlToClipboard'
+            ];
+            
+            const missing = requiredFunctions.filter(fn => typeof window[fn] !== 'function');
+            
+            if (missing.length > 0) {
+                console.error('🚨 누락된 함수들:', missing);
+                return false;
+            }
+            
+            console.log('✅ 모든 필수 함수 정상 로드됨');
+            return true;
+        }
+        
+        // 즉시 검증 실행
+        validateScriptIntegrity();
+        
+        // END OF SCRIPT - 스크립트 종료 마커
     </script>
 </body>
 </html>
