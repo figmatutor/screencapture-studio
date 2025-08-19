@@ -1,0 +1,35 @@
+{
+  "name": "flow-screenshot",
+  "version": "1.0.0",
+  "description": "한 번의 클릭으로 서비스 전체를 담는 플로우 스크린샷 서비스",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "screenshot",
+    "web-crawling",
+    "flow-capture",
+    "automation"
+  ],
+  "author": "Flow Screenshot Team",
+  "license": "MIT",
+  "dependencies": {
+    "adb-tools": "^1.0.0",
+    "appium": "^2.0.0",
+    "archiver": "^6.0.1",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fontkit": "^1.8.1",
+    "fs-extra": "^11.1.1",
+    "node-simctl": "^7.0.0",
+    "path": "^0.12.7",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^19.11.1",
+    "sharp": "^0.33.0",
+    "url-parse": "^1.5.10",
+    "webdriverio": "^8.25.0"
+  }
+}

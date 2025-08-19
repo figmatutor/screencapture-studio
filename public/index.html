@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플로우 스크린샷 - 한 번의 클릭으로 서비스 전체를 담다</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: white;
+            background: #010201;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            padding: 80px 0 40px;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .tagline {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 32px;
+            color: #6b7280;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* GNB 스타일 */
+        .gnb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #010201;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .gnb-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .gnb-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .gnb-btn.secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gnb-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .gnb-btn.primary {
+            background: white;
+            color: #2b2b2b;
+        }
+        
+        .gnb-btn.primary:hover {
+            background: #f0f0f0;
+        }
+        
+        /* 메인 콘텐츠 */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+            text-align: center;
+            transform: translateY(-300px);
+        }
+        
+        .hero-title {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 700;
+            font-size: 48px;
+            line-height: 1.2;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .hero-subtitle {
+            font-family: 'Pretendard', sans-serif;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 48px;
+        }
+        
+        /* 새로운 애니메이션 입력 섹션 */
+        .input-section {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 그리드 배경 제거됨 */
+        
+        .white,
+        .border,
+        .darkBorderBg,
+        .glow {
+            max-height: 70px;
+            max-width: 400px;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            overflow: hidden;
+            z-index: -1;
+            border-radius: 12px;
+            filter: blur(3px);
+        }
+        
+        .url-input {
+            background-color: #010201;
+            border: none;
+            width: 387px;
+            height: 56px;
+            border-radius: 10px;
+            color: white;
+            padding-left: 20px;
+            padding-right: 60px;
+            font-size: 16px;
+            font-family: 'Pretendard', sans-serif;
+            outline: none;
+        }
+        
+        .url-input::placeholder {
+            color: #c0b9c0;
+        }
+        
+        #main:focus-within > #input-mask {
+            display: none;
+        }
+        
+        #input-mask {
+            pointer-events: none;
+            width: 100px;
+            height: 20px;
+            position: absolute;
+            background: linear-gradient(90deg, transparent, black);
+            top: 18px;
+            left: 70px;
+        }
+        
+        #pink-mask {
+            pointer-events: none;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            background: #cf30aa;
+            top: 10px;
+            left: 5px;
+            filter: blur(20px);
+            opacity: 0.8;
+            transition: all 2s;
+        }
+        
+        #main:hover > #pink-mask {
+            opacity: 0;
+        }
+        
+        .white {
+            max-height: 63px;
+            max-width: 393px;
+            border-radius: 10px;
+            filter: blur(2px);
+        }
+        
+        .white::before {
+            content: "";
+            z-index: -2;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(83deg);
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            filter: brightness(1.4);
+            background-image: conic-gradient(
+                rgba(0, 0, 0, 0) 0%,
+                #a099d8,
+                rgba(0, 0, 0, 0) 8%,
+                rgba(0, 0, 0, 0) 50%,
+                #dfa2da,
+                rgba(0, 0, 0, 0) 58%
+            );
+            transition: all 2s;
+        }
+        
+        .border {
+            max-height: 59px;
+            max-width: 389px;
+            border-radius: 11px;
+            filter: blur(0.5px);
+        }
+        
+        .border::before {
+            content: "";
+            z-index: -2;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(70deg);
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            filter: brightness(1.3);
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            background-image: conic-gradient(
+                #1c191c,
+                #402fb5 5%,
+                #1c191c 14%,
+                #1c191c 50%,
+                #cf30aa 60%,
+                #1c191c 64%
+            );
+            transition: all 2s;
+        }
+        
+        .darkBorderBg {
+            max-height: 65px;
+            max-width: 398px;
+        }
+        
+        .darkBorderBg::before {
+            content: "";
+            z-index: -2;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(82deg);
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            background-image: conic-gradient(
+                rgba(0, 0, 0, 0),
+                #18116a,
+                rgba(0, 0, 0, 0) 10%,
+                rgba(0, 0, 0, 0) 50%,
+                #6e1b60,
+                rgba(0, 0, 0, 0) 60%
+            );
+            transition: all 2s;
+        }
+        
+        #main:hover > .darkBorderBg::before {
+            transform: translate(-50%, -50%) rotate(-98deg);
+        }
+        #main:hover > .glow::before {
+            transform: translate(-50%, -50%) rotate(-120deg);
+        }
+        #main:hover > .white::before {
+            transform: translate(-50%, -50%) rotate(-97deg);
+        }
+        #main:hover > .border::before {
+            transform: translate(-50%, -50%) rotate(-110deg);
+        }
+        
+        #main:focus-within > .darkBorderBg::before {
+            transform: translate(-50%, -50%) rotate(442deg);
+            transition: all 4s;
+        }
+        #main:focus-within > .glow::before {
+            transform: translate(-50%, -50%) rotate(420deg);
+            transition: all 4s;
+        }
+        #main:focus-within > .white::before {
+            transform: translate(-50%, -50%) rotate(443deg);
+            transition: all 4s;
+        }
+        #main:focus-within > .border::before {
+            transform: translate(-50%, -50%) rotate(430deg);
+            transition: all 4s;
+        }
+        
+        .glow {
+            overflow: hidden;
+            filter: blur(30px);
+            opacity: 0.4;
+            max-height: 130px;
+            max-width: 440px;
+        }
+        
+        .glow:before {
+            content: "";
+            z-index: -2;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(60deg);
+            position: absolute;
+            width: 999px;
+            height: 999px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            background-image: conic-gradient(
+                #000,
+                #402fb5 5%,
+                #000 38%,
+                #000 50%,
+                #cf30aa 60%,
+                #000 87%
+            );
+            transition: all 2s;
+        }
+        
+        /* 돋보기 아이콘 제거됨 */
+        
+        .submit-btn {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            width: 28px;
+            height: 28px;
+            isolation: isolate;
+            overflow: hidden;
+            border-radius: 6px;
+            background: linear-gradient(180deg, #161329, black, #1d1b4b);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .filterBorder {
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            overflow: hidden;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            border-radius: 6px;
+            z-index: 5;
+        }
+        
+        .filterBorder::before {
+            content: "";
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            filter: brightness(1.35);
+            background-image: conic-gradient(
+                rgba(0, 0, 0, 0),
+                #3d3a4f,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0) 50%,
+                #3d3a4f,
+                rgba(0, 0, 0, 0) 100%
+            );
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% {
+                transform: translate(-50%, -50%) rotate(450deg);
+            }
+        }
+        
+        /* 푸터 숨김 */
+        .footer {
+            display: none;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1f1f1f;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: #4b4b4b;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .demo-form {
+            background: #f8fafc;
+            padding: 48px;
+            border-radius: 20px;
+            margin: 48px 0;
+            border: 1px solid #e2e8f0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1f1f1f;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #c7d2fe;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1f1f1f;
+        }
+
+        .feature-description {
+            color: #4b4b4b;
+            line-height: 1.6;
+        }
+
+        .personas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .persona-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e1e1e1;
+        }
+
+        .persona-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f1f1f;
+        }
+
+        .persona-role {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .persona-pain {
+            background: #fef2f2;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 4px solid #fecaca;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #dcfce7;
+            color: #16a34a;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 60px 0;
+            background: #f8fafc;
+            color: #6b7280;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* 데모 결과 스타일링 */
+        .demo-result-container {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 20px 0 !important;
+            z-index: 1;
+            box-sizing: border-box !important;
+            clear: both;
+            overflow: hidden;
+        }
+
+        .demo-result-active {
+            position: relative !important;
+            z-index: 1;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .demo-status-card {
+            padding: 24px;
+            border-radius: 16px;
+            margin: 16px 0;
+            position: relative !important;
+            overflow: hidden;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            left: auto !important;
+            top: auto !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+
+        .demo-status-card.running {
+            background: #e0f2fe;
+            border-left: 4px solid #0288d1;
+        }
+
+        .demo-status-card.success {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+
+        .demo-status-card.error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+
+        .progress-container {
+            margin-top: 16px;
+        }
+
+        .progress-bar-bg {
+            background: #f0f0f0;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #0288d1, #29b6f6);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .status-text {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .captured-pages {
+            margin: 16px 0;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+        }
+
+        .captured-pages h4 {
+            margin-bottom: 12px;
+            color: #1f1f1f;
+            font-size: 16px;
+        }
+
+        .pages-list {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #4b4b4b;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .pages-list li {
+            margin-bottom: 4px;
+            word-break: break-all;
+        }
+
+        .demo-actions {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            min-width: 140px;
+        }
+
+        .btn-pdf {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-zip {
+            background: linear-gradient(135deg, #2196f3, #42a5f5);
+            color: white;
+        }
+
+        .btn-zip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #eeeeee;
+            border-color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .gnb {
+                padding: 16px 20px;
+            }
+            
+            .logo {
+                font-size: 16px;
+            }
+            
+            .gnb-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .main-content {
+                padding: 100px 20px 20px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+                margin-bottom: 12px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+                margin-bottom: 36px;
+            }
+            
+            .input-section {
+                max-width: 100%;
+            }
+            
+            .white,
+            .border,
+            .darkBorderBg,
+            .glow {
+                max-width: 300px;
+            }
+            
+            .url-input {
+                width: 290px;
+                padding-left: 16px;
+                padding-right: 50px;
+                font-size: 14px;
+            }
+            
+            .white {
+                max-width: 295px;
+            }
+            
+            .border {
+                max-width: 291px;
+            }
+            
+            .darkBorderBg {
+                max-width: 298px;
+            }
+            
+            .glow {
+                max-width: 340px;
+            }
+            
+            .footer {
+                position: static;
+                text-align: center;
+                margin-top: 40px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- GNB -->
+    <nav class="gnb">
+        <div class="logo">Screencapture Studio</div>
+        <div class="gnb-buttons">
+            <button class="gnb-btn secondary">가입하기</button>
+            <button class="gnb-btn primary">로그인</button>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <h1 class="hero-title">
+            레퍼런스 수집<br>
+            링크 한 줄로 끝내세요.
+        </h1>
+        <p class="hero-subtitle">
+            여기에 캡처할 서비스 URL을 입력해 보세요.
+        </p>
+        
+        <div class="input-section">
+            <div id="main">
+                <div class="glow"></div>
+                <div class="darkBorderBg"></div>
+                <div class="white"></div>
+                <div class="border"></div>
+                <div id="pink-mask"></div>
+                <div id="input-mask"></div>
+                
+                <input 
+                    type="url" 
+                    class="url-input" 
+                    id="urlInput"
+                    placeholder="여기에 캡처할 서비스 URL을 입력해 보세요."
+                >
+                
+                <div class="filterBorder"></div>
+                <button class="submit-btn" id="submitBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+                </div>
+
+        <!-- 결과 표시 영역 -->
+        <div id="demoResult" style="margin-top: 40px; display: none; width: 100%; max-width: 600px;"></div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div>Figma Pedia</div>
+        <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
+    </footer>
+
+    <!-- 숨겨진 기존 콘텐츠들 (기능 보존용) -->
+    <div style="display: none;">
+        <!-- 기존 크롤링 도구 -->
+        <div>
+            <h1>스크린캡처 스튜디오</h1>
+            <p>웹사이트 URL을 입력하고 전체 페이지를 자동으로 캡처하세요</p>
+                    
+                    <!-- 탭 메뉴 -->
+                    <div class="demo-tabs" style="margin-bottom: 20px; display: none;">
+                        <button class="tab-btn active" data-tab="web" style="padding: 12px 24px; margin-right: 10px; border: none; background: #6366f1; color: white; border-radius: 8px; cursor: pointer;">웹사이트 크롤링</button>
+                        <button class="tab-btn" data-tab="app" style="padding: 12px 24px; margin-right: 10px; border: 1px solid #6366f1; background: white; color: #6366f1; border-radius: 8px; cursor: pointer;">📱 앱 스크린샷</button>
+                        <button class="tab-btn" data-tab="mobile" style="padding: 12px 24px; border: 1px solid #6366f1; background: white; color: #6366f1; border-radius: 8px; cursor: pointer;">🎬 앱 플로우 캡처</button>
+                    </div>
+                    
+                    <!-- 웹사이트 크롤링 폼 -->
+                    <div id="webTab" class="tab-content active" style="display: block;">
+                        <div style="margin-bottom: 24px;">
+                            <label style="font-family: 'Pretendard', sans-serif; font-weight: 500; font-size: 16px; color: #333; display: block; margin-bottom: 8px;">
+                                웹사이트 URL
+                            </label>
+                            <input type="url" 
+                                   id="urlInput"
+                                   placeholder="https://example.com" 
+                                   style="width: 100%; padding: 16px; font-family: 'Pretendard', sans-serif; font-size: 16px; border: 2px solid #e5e5e5; border-radius: 8px; background: #fafafa; transition: all 0.3s ease; box-sizing: border-box;"
+                                   onfocus="this.style.borderColor='#295bff'; this.style.background='white';"
+                                   onblur="this.style.borderColor='#e5e5e5'; this.style.background='#fafafa';">
+                    </div>
+                        
+                        <div style="margin-bottom: 32px;">
+                            <label style="font-family: 'Pretendard', sans-serif; font-weight: 500; font-size: 16px; color: #333; display: block; margin-bottom: 8px;">
+                                디바이스 유형
+                            </label>
+                            <select id="deviceSelect" 
+                                    style="width: 100%; padding: 16px; font-family: 'Pretendard', sans-serif; font-size: 16px; border: 2px solid #e5e5e5; border-radius: 8px; background: #fafafa; transition: all 0.3s ease; box-sizing: border-box; cursor: pointer;"
+                                    onfocus="this.style.borderColor='#295bff'; this.style.background='white';"
+                                    onblur="this.style.borderColor='#e5e5e5'; this.style.background='#fafafa';">
+                            <option value="desktop">데스크톱 (1920x1080)</option>
+                            <option value="tablet">태블릿 (768x1024)</option>
+                            <option value="mobile">모바일 (375x667)</option>
+                        </select>
+                    </div>
+                        
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px;">
+                            <button id="demoBtn" 
+                                    style="flex: 1; min-width: 200px; padding: 16px 24px; background: #295bff; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
+                                    onmouseover="this.style.background='#1e4ee6'; this.style.transform='translateY(-2px)'"
+                                    onmouseout="this.style.background='#295bff'; this.style.transform='translateY(0)'">
+                        플로우 캡처 시작하기
+                    </button>
+                            <button id="fastDemoBtn" 
+                                    style="flex: 1; min-width: 200px; padding: 16px 24px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease;"
+                                    onmouseover="this.style.background='#d97706'; this.style.transform='translateY(-2px)'"
+                                    onmouseout="this.style.background='#f59e0b'; this.style.transform='translateY(0)'">
+                                ⚡ 빠른 캡처
+                            </button>
+                        </div>
+                        
+                    <div id="demoResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box;"></div>
+                    </div> <!-- 웹탭 끝 -->
+                    
+                    <!-- 앱 스크린샷 탭 -->
+                    <div id="appTab" class="tab-content" style="display: none; visibility: hidden;">
+                        <div class="form-group">
+                            <label class="form-label">앱스토어 URL</label>
+                            <input type="url" class="form-input" placeholder="https://apps.apple.com/... 또는 https://play.google.com/..." id="appStoreInput">
+                            <small style="color: #6b7280; font-size: 14px; margin-top: 5px; display: block;">Apple App Store 또는 Google Play Store URL을 입력하세요</small>
+                        </div>
+                        
+                        <div class="demo-examples" style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p style="margin: 0 0 10px 0; font-weight: 600;">📝 예시 URL:</p>
+                            <ul style="margin: 0; padding-left: 20px; color: #6b7280;">
+                                <li style="margin-bottom: 5px;">Apple: https://apps.apple.com/kr/app/instagram/id389801252</li>
+                                <li>Google: https://play.google.com/store/apps/details?id=com.instagram.android</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn" id="appDemoBtn" style="width: 100%; padding: 16px; background: #6366f1; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 20px;">
+                            📱 앱 스크린샷 수집하기
+                        </button>
+                        
+                        <div id="appDemoResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box;"></div>
+                    </div>
+                    
+                    <!-- 모바일 플로우 캡처 탭 -->
+                    <div id="mobileTab" class="tab-content" style="display: none; visibility: hidden;">
+                        <div class="form-group">
+                            <label class="form-label">플랫폼 선택</label>
+                            <select class="form-input" id="platformSelect">
+                                <option value="android">Android</option>
+                                <option value="ios">iOS (시뮬레이터)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">플로우 시나리오</label>
+                            <select class="form-input" id="scenarioSelect">
+                                <option value="">시나리오를 선택하세요...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="appPackageGroup" style="display: block;">
+                            <label class="form-label">앱 패키지명 (선택사항)</label>
+                            <input type="text" class="form-input" placeholder="com.example.app" id="appPackageInput">
+                            <small style="color: #6b7280; font-size: 14px; margin-top: 5px; display: block;">Android: 패키지명 (예: com.instagram.android)</small>
+                        </div>
+                        
+                        <div class="mobile-requirements" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                            <p style="margin: 0 0 10px 0; font-weight: 600; color: #856404;">⚠️ 사전 요구사항:</p>
+                            <ul style="margin: 0; padding-left: 20px; color: #856404; font-size: 14px;">
+                                <li>Appium 서버가 실행 중이어야 합니다 (appium 명령어)</li>
+                                <li>Android: USB 디버깅이 활성화된 디바이스가 연결되어야 합니다</li>
+                                <li>iOS: 시뮬레이터가 실행 중이어야 합니다</li>
+                                <li>대상 앱이 디바이스에 설치되어 있어야 합니다</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="btn" id="mobileFlowBtn" style="width: 100%; padding: 16px; background: #6366f1; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 20px;">
+                            🎬 앱 플로우 캡처 시작하기
+                        </button>
+                        
+                        <div id="mobileFlowResult" class="demo-result-container" style="margin-top: 20px; display: none; position: relative; width: 100%; max-width: 100%; box-sizing: border-box;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" style="display: none;">
+                <h2 class="section-title">핵심 기능</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">자동 크롤링</h3>
+                        <p class="feature-description">
+                            웹사이트의 모든 링크를 자동으로 탐색하고 페이지 구조를 분석합니다.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3 class="feature-title">전체 페이지 캡처</h3>
+                        <p class="feature-description">
+                            스크롤이 긴 페이지도 완전하게 캡처하여 고화질 이미지로 제공합니다.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3 class="feature-title">플로우차트 생성</h3>
+                        <p class="feature-description">
+                            페이지 간의 연결 구조를 시각적인 플로우차트로 자동 생성합니다.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">반응형 캡처</h3>
+                        <p class="feature-description">
+                            데스크톱, 태블릿, 모바일 등 다양한 디바이스 환경에서 캡처 가능합니다.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h3 class="feature-title">다양한 내보내기</h3>
+                        <p class="feature-description">
+                            PDF, PNG, ZIP 등 다양한 형식으로 결과물을 내보낼 수 있습니다.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">로그인 지원</h3>
+                        <p class="feature-description">
+                            로그인이 필요한 서비스도 안전하게 크롤링하고 캡처할 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" style="display: none;">
+                <h2 class="section-title">타겟 사용자</h2>
+                <div class="personas">
+                    <div class="persona-card">
+                        <h3 class="persona-title">최소라</h3>
+                        <p class="persona-role">기획자/PM, 32세</p>
+                        <div class="persona-pain">
+                            <strong>고충:</strong> "서비스의 전체 흐름을 파악하기 위해 모든 버튼을 일일이 눌러보며 캡처하는 데 너무 많은 시간을 씁니다."
+                        </div>
+                        <p><strong>요구사항:</strong> 서비스의 전체적인 구조와 흐름을 한눈에 파악하고, 각 단계별 스크린샷을 손쉽게 얻어 기획서에 바로 활용</p>
+                    </div>
+                    <div class="persona-card">
+                        <h3 class="persona-title">김지훈</h3>
+                        <p class="persona-role">UI/UX 디자이너, 28세</p>
+                        <div class="persona-pain">
+                            <strong>고충:</strong> "경쟁사 앱의 특정 플로우를 참고하고 싶은데, 스크롤이 긴 페이지나 여러 단계를 거쳐야 하는 화면을 하나하나 캡처하고 포토샵에서 이어 붙이는 작업이 매우 번거롭습니다."
+                        </div>
+                        <p><strong>요구사항:</strong> 클릭 한 번으로 특정 플로우 전체의 스크린샷을 고화질로 얻고, PC와 모바일 버전을 쉽게 전환하며 캡처</p>
+                    </div>
+                    <div class="persona-card">
+                        <h3 class="persona-title">박성진</h3>
+                        <p class="persona-role">개발자/QA 엔지니어, 35세</p>
+                        <div class="persona-pain">
+                            <strong>고충:</strong> "오류가 발생하는 정확한 지점과 그 과정까지의 모든 단계를 설명하기 위해 여러 장의 스크린샷을 찍고 순서대로 정리하는 것이 비효율적"
+                        </div>
+                        <p><strong>요구사항:</strong> 서비스 링크와 간단한 설명만으로 버그가 발생한 지점까지의 전체 플로우 스크린샷을 자동으로 생성하여 팀원들과 공유</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" style="display: none;">
+                <h2 class="section-title">개발 현황</h2>
+                <p class="section-description">
+                    현재 프로토타입 개발 단계에 있으며, 핵심 기능들을 순차적으로 구현하고 있습니다.
+                    웹 크롤링 엔진과 스크린샷 캡처 기능을 중심으로 개발이 진행되고 있습니다.
+                </p>
+                
+                <div style="background: #f8fcff; padding: 24px; border-radius: 12px; margin-top: 24px;">
+                    <h4 style="margin-bottom: 16px; color: #1f1f1f;">📅 로드맵</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;">✅ 프로젝트 구조 및 기술 스택 설정</li>
+                        <li style="margin-bottom: 8px;">🔄 백엔드 API 서버 구축 (진행 중)</li>
+                        <li style="margin-bottom: 8px;">⏳ 웹 크롤링 엔진 개발</li>
+                        <li style="margin-bottom: 8px;">⏳ 스크린샷 캡처 기능 구현</li>
+                        <li style="margin-bottom: 8px;">⏳ 프론트엔드 UI 개발</li>
+                        <li style="margin-bottom: 8px;">⏳ 플로우차트 시각화 기능</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 플로우 스크린샷. 모든 권리 보유.</p>
+            <p>한 번의 클릭으로 서비스 전체를 담다</p>
+        </div>
+    </footer>
+
+    <script>
+        async function startDemo() {
+            const url = document.getElementById('urlInput').value;
+            const device = document.getElementById('deviceSelect').value;
+            const btn = document.getElementById('demoBtn');
+            const result = document.getElementById('demoResult');
+            
+            if (!url) {
+                alert('URL을 입력해주세요.');
+                return;
+            }
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('유효한 URL을 입력해주세요. (http:// 또는 https://로 시작)');
+                return;
+            }
+
+            // 이전 결과 초기화
+            resetDemoResult();
+            
+            btn.disabled = true;
+            btn.textContent = '크롤링 시작 중...';
+            
+            // 강제 위치 고정
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div class="demo-status-card running">
+                    <strong>🚀 크롤링 시작됨</strong><br>
+                    URL: <code>${url}</code><br>
+                    디바이스: <code>${device}</code><br>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div id="progressBar" class="progress-bar"></div>
+                        </div>
+                        <p id="statusText" class="status-text">크롤링 준비 중...</p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                // 크롤링 요청 시작
+                const response = await fetch('/api/crawl/advanced', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url,
+                        viewport: device,
+                        maxPages: 10,
+                        maxDepth: 3
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 크롤링 상태 모니터링
+                    monitorCrawling(data.jobId);
+                } else {
+                    throw new Error(data.error || '크롤링 시작에 실패했습니다.');
+                }
+
+            } catch (error) {
+                console.error('크롤링 오류:', error);
+                showDemoError('요청 처리 중 오류가 발생했습니다.', error.message);
+                resetDemoButton(btn);
+            }
+        }
+
+        // 빠른 데모 함수
+        async function startFastDemo() {
+            const btn = document.getElementById('fastDemoBtn');
+            const url = document.getElementById('urlInput').value.trim();
+            const result = document.getElementById('demoResult');
+            
+            if (!url) {
+                alert('URL을 입력해주세요.');
+                return;
+            }
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('유효한 URL을 입력해주세요. (http:// 또는 https://로 시작)');
+                return;
+            }
+
+            // 이전 결과 초기화
+            resetDemoResult();
+            
+            btn.disabled = true;
+            btn.textContent = '⚡ 빠른 캡처 중...';
+            
+            // 강제 위치 고정
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div class="demo-status-card running">
+                    <strong>⚡ 빠른 캡처 모드 시작</strong><br>
+                    URL: <code>${url}</code><br>
+                    모드: <code>완전한 렌더링 (CSS+이미지)</code> (예상시간: 8-12초)<br>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div id="progressBar" class="progress-bar"></div>
+                        </div>
+                        <p id="statusText" class="status-text">빠른 캡처 준비 중...</p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                // 빠른 크롤링 요청 시작
+                const response = await fetch('/api/crawl/fast', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 크롤링 상태 모니터링 (빠른 업데이트)
+                    monitorFastCrawling(data.jobId, btn);
+                } else {
+                    throw new Error(data.error || '빠른 캡처 시작에 실패했습니다.');
+                }
+
+            } catch (error) {
+                console.error('빠른 캡처 오류:', error);
+                showDemoError('빠른 캡처 오류', error.message);
+                resetFastDemoButton(btn);
+            }
+        }
+
+        async function monitorFastCrawling(jobId, btn) {
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            const result = document.getElementById('demoResult');
+
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`/api/crawl/status/${jobId}`);
+                    const status = await response.json();
+
+                    progressBar.style.width = status.progress + '%';
+                    statusText.textContent = status.message;
+
+                    if (status.status === 'completed') {
+                        // 빠른 캡처 완료
+                        const resultResponse = await fetch(`/api/crawl/result/${jobId}`);
+                        const resultData = await resultResponse.json();
+
+                        if (resultData.success && resultData.result.totalPages > 0) {
+                            const duration = status.endTime ? 
+                                ((new Date(status.endTime) - new Date(status.startTime)) / 1000).toFixed(1) : 'N/A';
+                            showFastDemoSuccess(resultData.result, jobId, duration);
+                        } else {
+                            showDemoError('빠른 캡처 완료', '캡처된 페이지가 없습니다.');
+                        }
+                        
+                        resetFastDemoButton(btn);
+                        return;
+
+                    } else if (status.status === 'failed') {
+                        showDemoError('빠른 캡처 실패', status.message || status.error);
+                        resetFastDemoButton(btn);
+                        return;
+                    }
+
+                    // 빠른 모드이므로 1초마다 확인
+                    setTimeout(checkStatus, 1000);
+
+                } catch (error) {
+                    console.error('빠른 캡처 상태 확인 오류:', error);
+                    showDemoError('상태 확인 오류', '빠른 캡처 상태를 확인할 수 없습니다.');
+                    resetFastDemoButton(btn);
+                }
+            };
+
+            // 첫 번째 상태 확인 (빠른 시작)
+            setTimeout(checkStatus, 500);
+        }
+
+        function resetFastDemoButton(btn) {
+            btn.disabled = false;
+            btn.textContent = '⚡ 완전 렌더링 (10초)';
+        }
+
+        function showFastDemoSuccess(result, jobId, duration) {
+            // 전체 화면을 새로운 완료 화면으로 교체
+            document.body.innerHTML = `
+                <!-- GNB -->
+                <nav class="gnb">
+                    <div class="logo">Screencapture Studio</div>
+                    <div class="gnb-buttons">
+                        <button class="gnb-btn secondary">가입하기</button>
+                        <button class="gnb-btn primary">로그인</button>
+                    </div>
+                </nav>
+
+                <!-- 완료 화면 -->
+                <main style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 80px; text-align: center;">
+                    <h1 style="font-family: 'Pretendard', sans-serif; font-weight: 700; font-size: 48px; line-height: 1.2; color: white; margin-bottom: 16px;">
+                        플로우 캡쳐 완료!
+                    </h1>
+                    <p style="font-family: 'Pretendard', sans-serif; font-weight: 400; font-size: 20px; line-height: 1.5; color: rgba(255, 255, 255, 0.7); margin-bottom: 48px;">
+                        다운로드 버튼을 누르시면 전체 이미지를 받으실 수 있어요!
+                    </p>
+                    
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="window.location.href='/'" 
+                                style="padding: 16px 32px; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.borderColor='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.1)'"
+                                onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='transparent'">
+                            다시 캡쳐하기
+                        </button>
+                        <button onclick="window.location.href='/api/export/zip/${jobId}'" 
+                                style="padding: 16px 32px; background: #295bff; color: white; border: none; border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='#1e4ee6'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#295bff'; this.style.transform='translateY(0)'">
+                            다운받기
+                        </button>
+                    </div>
+                    
+                    <p style="font-family: 'Pretendard', sans-serif; font-size: 14px; color: rgba(255, 255, 255, 0.5); margin-top: 32px;">
+                        총 ${result.totalPages}개 페이지 캡처 완료 | 소요시간 ${duration}초
+                    </p>
+                </main>
+
+                <!-- 푸터 -->
+                <footer style="position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
+                    <div>Figma Pedia</div>
+                    <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
+                </footer>
+            `;
+        }
+
+        async function monitorCrawling(jobId) {
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            const result = document.getElementById('demoResult');
+            const btn = document.getElementById('demoBtn');
+
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`/api/crawl/status/${jobId}`);
+                    const status = await response.json();
+
+                    progressBar.style.width = status.progress + '%';
+                    statusText.textContent = status.message;
+
+                    if (status.status === 'completed') {
+                        // 크롤링 완료
+                        const resultResponse = await fetch(`/api/crawl/result/${jobId}`);
+                        const resultData = await resultResponse.json();
+
+                        if (resultData.success && resultData.result.totalPages > 0) {
+                            showDemoSuccess(resultData.result, jobId);
+                        } else {
+                            showDemoError('크롤링 완료', '캡처된 페이지가 없습니다. URL을 확인해주세요.');
+                        }
+                        
+                        resetDemoButton(btn);
+                        return;
+
+                    } else if (status.status === 'failed') {
+                        showDemoError('크롤링 실패', status.message || status.error);
+                        resetDemoButton(btn);
+                        return;
+                    }
+
+                    // 계속 진행 중이면 3초 후 다시 확인
+                    setTimeout(checkStatus, 3000);
+
+                } catch (error) {
+                    console.error('상태 확인 오류:', error);
+                    showDemoError('상태 확인 오류', '크롤링 상태를 확인할 수 없습니다.');
+                    resetDemoButton(btn);
+                }
+            };
+
+            // 첫 번째 상태 확인
+            setTimeout(checkStatus, 2000);
+        }
+
+        // 유틸리티 함수들
+        function resetDemoResult() {
+            const result = document.getElementById('demoResult');
+            result.style.display = 'none';
+            result.className = 'demo-result-container';
+            result.innerHTML = '';
+            
+            // 강제 위치 리셋
+            result.style.position = 'relative';
+            result.style.width = '100%';
+            result.style.maxWidth = '100%';
+            result.style.left = 'auto';
+            result.style.top = 'auto';
+            result.style.right = 'auto';
+            result.style.bottom = 'auto';
+            result.style.transform = 'none';
+            result.style.zIndex = '1';
+        }
+
+        function resetDemoButton(btn) {
+            btn.disabled = false;
+            btn.textContent = '플로우 캡처 시작하기';
+        }
+
+        function showDemoError(title, message) {
+            const result = document.getElementById('demoResult');
+            
+            // 강제 위치 고정
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div style="background: #2b2b2b; border-radius: 16px; padding: 40px; text-align: center; color: white; max-width: 500px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); border-left: 4px solid #ff4757;">
+                    <div style="margin-bottom: 24px;">
+                        <h2 style="font-family: 'Pretendard', -apple-system, sans-serif; font-weight: 600; font-size: 32px; line-height: 40px; margin: 0 0 16px 0; color: #ff4757;">
+                            ❌ ${title}
+                        </h2>
+                        <p style="font-family: 'Pretendard', -apple-system, sans-serif; font-weight: 400; font-size: 16px; line-height: 19px; color: rgba(255, 255, 255, 0.8); margin: 0;">
+                    ${message}
+                        </p>
+                    </div>
+                    
+                    <button onclick="resetDemoResult()" 
+                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 20px; background: #295bff; color: white; border: none; border-radius: 6px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; line-height: 22px; min-width: 140px; cursor: pointer; transition: all 0.3s ease;"
+                       onmouseover="this.style.background='#1e4ee6'"
+                       onmouseout="this.style.background='#295bff'">
+                            다시 시도하기
+                        </button>
+                </div>
+            `;
+        }
+
+        function showDemoSuccess(crawlResult, jobId) {
+            // 전체 화면을 새로운 완료 화면으로 교체
+            document.body.innerHTML = `
+                <!-- GNB -->
+                <nav class="gnb">
+                    <div class="logo">Screencapture Studio</div>
+                    <div class="gnb-buttons">
+                        <button class="gnb-btn secondary">가입하기</button>
+                        <button class="gnb-btn primary">로그인</button>
+                    </div>
+                </nav>
+
+                <!-- 완료 화면 -->
+                <main style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 80px; text-align: center;">
+                    <h1 style="font-family: 'Pretendard', sans-serif; font-weight: 700; font-size: 48px; line-height: 1.2; color: white; margin-bottom: 16px;">
+                        플로우 캡쳐 완료!
+                    </h1>
+                    <p style="font-family: 'Pretendard', sans-serif; font-weight: 400; font-size: 20px; line-height: 1.5; color: rgba(255, 255, 255, 0.7); margin-bottom: 48px;">
+                        다운로드 버튼을 누르시면 전체 이미지를 받으실 수 있어요!
+                    </p>
+                    
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="window.location.href='/'" 
+                                style="padding: 16px 32px; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.borderColor='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.1)'"
+                                onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='transparent'">
+                            다시 캡쳐하기
+                        </button>
+                        <button onclick="window.location.href='/api/export/zip/${jobId}'" 
+                                style="padding: 16px 32px; background: #295bff; color: white; border: none; border-radius: 12px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 18px; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='#1e4ee6'; this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#295bff'; this.style.transform='translateY(0)'">
+                            다운받기
+                        </button>
+                    </div>
+                    
+                    <p style="font-family: 'Pretendard', sans-serif; font-size: 14px; color: rgba(255, 255, 255, 0.5); margin-top: 32px;">
+                        총 ${crawlResult.totalPages}개 페이지 캡처 완료
+                    </p>
+                </main>
+
+                <!-- 푸터 -->
+                <footer style="position: fixed; bottom: 40px; left: 40px; color: rgba(255, 255, 255, 0.5); font-family: 'Pretendard', sans-serif; font-size: 14px;">
+                    <div>Figma Pedia</div>
+                    <div style="margin-top: 4px; opacity: 0.7;">© 2025 Figma pedia. All rights reserved.</div>
+                </footer>
+            `;
+        }
+
+        function downloadFile(url, type) {
+            console.log(`${type} 다운로드 시작:`, url);
+            try {
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error(`${type} 다운로드 오류:`, error);
+                alert(`${type} 다운로드 중 오류가 발생했습니다.`);
+            }
+        }
+
+        // 위치 강제 고정 함수
+        function ensureProperPosition(element) {
+            if (!element) return;
+            
+            // 모든 가능한 위치 스타일 리셋
+            element.style.position = 'relative';
+            element.style.width = '100%';
+            element.style.maxWidth = '100%';
+            element.style.left = 'auto';
+            element.style.top = 'auto';
+            element.style.right = 'auto';
+            element.style.bottom = 'auto';
+            element.style.transform = 'none';
+            element.style.marginLeft = '0';
+            element.style.marginRight = '0';
+            element.style.float = 'none';
+            element.style.clear = 'both';
+            element.style.zIndex = '1';
+            element.style.boxSizing = 'border-box';
+            
+            // 부모 컨테이너 확인
+            const parent = element.parentElement;
+            if (parent) {
+                parent.style.position = 'relative';
+                parent.style.overflow = 'visible';
+            }
+            
+            console.log('UI 위치 강제 고정 완료:', element.id);
+        }
+
+        // 페이지 로드 시 초기화 및 이벤트 리스너 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM 로딩 완료, 이벤트 리스너 등록 시작');
+            
+            // 함수들이 정의되었는지 확인
+            const functionsCheck = {
+                startDemo: typeof startDemo === 'function',
+                startFastDemo: typeof startFastDemo === 'function',
+                switchTab: typeof switchTab === 'function',
+                startAppDemo: typeof startAppDemo === 'function',
+                startMobileFlowCapture: typeof startMobileFlowCapture === 'function'
+            };
+            console.log('🔍 함수 정의 상태:', functionsCheck);
+            
+            // 메인 데모 버튼 이벤트 리스너 등록
+            const demoBtn = document.getElementById('demoBtn');
+            if (demoBtn) {
+                demoBtn.addEventListener('click', startDemo);
+                console.log('✅ startDemo 이벤트 리스너 등록됨');
+            }
+            
+            // 빠른 데모 버튼 이벤트 리스너 등록
+            const fastDemoBtn = document.getElementById('fastDemoBtn');
+            if (fastDemoBtn) {
+                fastDemoBtn.addEventListener('click', startFastDemo);
+                console.log('✅ startFastDemo 이벤트 리스너 등록됨');
+            }
+            
+            // 새로운 제출 버튼 이벤트 리스너 등록
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function() {
+                    console.log('제출 버튼 클릭됨');
+                    const urlInput = document.getElementById('urlInput');
+                    if (urlInput && urlInput.value.trim()) {
+                        // URL 유효성 검사
+                        try {
+                            new URL(urlInput.value);
+                            // 숨겨진 URL 입력 필드에도 값 복사
+                            const hiddenUrlInput = document.querySelector('#webTab input[type="url"]');
+                            if (hiddenUrlInput) {
+                                hiddenUrlInput.value = urlInput.value;
+                            }
+                            // 빠른 캡처 실행
+                            if (typeof startFastDemo === 'function') {
+                                startFastDemo();
+                            } else {
+                                console.error('startFastDemo 함수를 찾을 수 없습니다');
+                            }
+                        } catch (e) {
+                            alert('올바른 URL을 입력해주세요. (예: https://example.com)');
+                        }
+                    } else {
+                        alert('URL을 입력해주세요.');
+                    }
+                });
+                console.log('✅ submitBtn 이벤트 리스너 등록됨');
+            }
+            
+            // Enter 키 지원
+            const urlInput = document.getElementById('urlInput');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        submitBtn.click();
+                    }
+                });
+                console.log('✅ urlInput Enter 키 이벤트 리스너 등록됨');
+            }
+            
+            // 앱 데모 버튼 이벤트 리스너 등록
+            const appDemoBtn = document.getElementById('appDemoBtn');
+            if (appDemoBtn) {
+                appDemoBtn.addEventListener('click', startAppDemo);
+                console.log('✅ startAppDemo 이벤트 리스너 등록됨');
+            }
+            
+            // 모바일 플로우 버튼 이벤트 리스너 등록
+            const mobileFlowBtn = document.getElementById('mobileFlowBtn');
+            if (mobileFlowBtn) {
+                mobileFlowBtn.addEventListener('click', startMobileFlowCapture);
+                console.log('✅ startMobileFlowCapture 이벤트 리스너 등록됨');
+            }
+            
+            // 탭 버튼들 이벤트 리스너 등록
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+            console.log(`✅ ${tabBtns.length}개 탭 버튼 이벤트 리스너 등록됨`);
+            
+            resetDemoResult();
+            
+            // 추가 위치 체크
+            setTimeout(() => {
+                const result = document.getElementById('demoResult');
+                ensureProperPosition(result);
+                console.log('📍 UI 위치 체크 완료');
+            }, 100);
+            
+            // 상태 체크
+            fetch('/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('🌐 서버 상태:', data);
+                })
+                .catch(error => {
+                    console.error('❌ 서버 연결 오류:', error);
+                });
+                
+            console.log('🎉 모든 이벤트 리스너 등록 완료');
+        });
+
+        // 추가 안전장치: 윈도우 리사이즈 시에도 위치 체크
+        window.addEventListener('resize', function() {
+            const result = document.getElementById('demoResult');
+            if (result && result.style.display !== 'none') {
+                ensureProperPosition(result);
+            }
+        });
+
+        // 탭 전환 기능
+        function switchTab(tabName) {
+            console.log(`🔄 탭 전환: ${tabName}`);
+            
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = 'white';
+                btn.style.color = '#6366f1';
+            });
+            
+            // 모든 탭 콘텐츠 숨기기
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // 선택된 탭 활성화 (data-tab 속성 사용)
+            const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.style.background = '#6366f1';
+                activeBtn.style.color = 'white';
+            }
+            
+            // 해당 탭 콘텐츠 표시
+            if (tabName === 'web') {
+                document.getElementById('webTab').style.display = 'block';
+            } else if (tabName === 'app') {
+                document.getElementById('appTab').style.display = 'block';
+            } else if (tabName === 'mobile') {
+                document.getElementById('mobileTab').style.display = 'block';
+                // 모바일 탭 첫 진입시 시나리오 로드
+                loadMobileScenarios();
+            }
+            
+            console.log(`✅ 탭 전환 완료: ${tabName}`);
+        }
+
+        // 앱 크롤링 시작
+        async function startAppDemo() {
+            const appStoreUrl = document.getElementById('appStoreInput').value.trim();
+            const btn = document.getElementById('appDemoBtn');
+            const result = document.getElementById('appDemoResult');
+            
+            if (!appStoreUrl) {
+                alert('앱스토어 URL을 입력해주세요.');
+                return;
+            }
+
+            // URL 형식 검증
+            if (!appStoreUrl.includes('apps.apple.com') && 
+                !appStoreUrl.includes('itunes.apple.com') && 
+                !appStoreUrl.includes('play.google.com')) {
+                alert('Apple App Store 또는 Google Play Store URL만 지원됩니다.');
+                return;
+            }
+
+            // 이전 결과 초기화
+            resetAppDemoResult();
+            
+            btn.disabled = true;
+            btn.textContent = '📱 앱 스크린샷 수집 중...';
+            
+            // 강제 위치 고정
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div class="demo-status-card running">
+                    <strong>📱 앱 스크린샷 수집 시작됨</strong><br>
+                    URL: <code>${appStoreUrl}</code><br>
+                    상태: 앱스토어 분석 중...<br>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 10%"></div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/app/appstore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        appStoreUrl: appStoreUrl
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log('앱 크롤링 시작:', data.jobId);
+                    monitorAppCrawling(data.jobId);
+                } else {
+                    showAppDemoError('크롤링 시작 실패', data.error || '알 수 없는 오류가 발생했습니다.');
+                    resetAppDemoButton(btn);
+                }
+            } catch (error) {
+                console.error('앱 크롤링 API 오류:', error);
+                showAppDemoError('API 요청 실패', '서버와의 통신 중 오류가 발생했습니다.');
+                resetAppDemoButton(btn);
+            }
+        }
+
+        // 앱 크롤링 모니터링
+        async function monitorAppCrawling(jobId) {
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`/api/app/status/${jobId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const job = data.job;
+                        
+                        if (job.status === 'completed') {
+                            // 결과 조회
+                            const resultResponse = await fetch(`/api/app/result/${jobId}`);
+                            const resultData = await resultResponse.json();
+                            
+                            if (resultData.success) {
+                                showAppDemoSuccess(resultData.result, jobId);
+                                resetAppDemoButton(document.getElementById('appDemoBtn'));
+                            } else {
+                                showAppDemoError('결과 조회 실패', resultData.error);
+                                resetAppDemoButton(document.getElementById('appDemoBtn'));
+                            }
+                        } else if (job.status === 'failed') {
+                            showAppDemoError('크롤링 실패', job.error || '알 수 없는 오류가 발생했습니다.');
+                            resetAppDemoButton(document.getElementById('appDemoBtn'));
+                        } else {
+                            // 진행 중 - 상태 업데이트
+                            updateAppCrawlingProgress(job);
+                            setTimeout(checkStatus, 3000); // 3초 후 재확인
+                        }
+                    } else {
+                        showAppDemoError('상태 확인 실패', data.error);
+                        resetAppDemoButton(document.getElementById('appDemoBtn'));
+                    }
+                } catch (error) {
+                    console.error('상태 확인 오류:', error);
+                    showAppDemoError('상태 확인 오류', '서버와의 통신 중 오류가 발생했습니다.');
+                    resetAppDemoButton(document.getElementById('appDemoBtn'));
+                }
+            };
+            
+            // 첫 번째 상태 확인
+            setTimeout(checkStatus, 2000);
+        }
+
+        // 앱 크롤링 진행 상태 업데이트
+        function updateAppCrawlingProgress(job) {
+            const result = document.getElementById('appDemoResult');
+            const progressFill = result.querySelector('.progress-fill');
+            
+            if (progressFill) {
+                progressFill.style.width = `${job.progress || 50}%`;
+            }
+            
+            const statusCard = result.querySelector('.demo-status-card strong');
+            if (statusCard) {
+                statusCard.innerHTML = `📱 앱 스크린샷 수집 중... (${job.progress || 50}%)`;
+            }
+        }
+
+        // 앱 크롤링 결과 초기화
+        function resetAppDemoResult() {
+            const result = document.getElementById('appDemoResult');
+            result.style.display = 'none';
+            result.className = 'demo-result-container';
+            result.innerHTML = '';
+            
+            // 강제 위치 리셋
+            ensureProperPosition(result);
+        }
+
+        // 앱 크롤링 에러 표시
+        function showAppDemoError(title, message) {
+            const result = document.getElementById('appDemoResult');
+            
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div class="demo-status-card error">
+                    <strong>❌ ${title}</strong><br>
+                    ${message}
+                    <div class="demo-actions">
+                        <button onclick="resetAppDemoResult()" class="btn-secondary">
+                            다시 시도하기
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 앱 크롤링 성공 결과 표시
+        function showAppDemoSuccess(crawlResult, jobId) {
+            const result = document.getElementById('appDemoResult');
+            
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            
+            const appInfo = crawlResult.appInfo || {};
+            const screenshots = crawlResult.screenshots || [];
+            
+            result.innerHTML = `
+                <div class="demo-status-card success">
+                    <strong>✅ 앱 스크린샷 수집 완료!</strong><br>
+                    <strong>📱 앱명:</strong> ${appInfo.title || '정보 없음'}<br>
+                    <strong>👨‍💻 개발자:</strong> ${appInfo.developer || '정보 없음'}<br>
+                    <strong>📸 스크린샷:</strong> ${screenshots.length}개<br>
+                    <strong>⭐ 평점:</strong> ${appInfo.rating || '정보 없음'}<br>
+                    
+                    <div class="demo-actions">
+                        <button onclick="downloadFile('/api/export/app-pdf/${jobId}', 'PDF')" class="btn-download">
+                            📄 PDF 다운로드
+                        </button>
+                        <button onclick="downloadFile('/api/export/app-zip/${jobId}', '폴더')" class="btn-download">
+                            📁 폴더 다운로드
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 앱 크롤링 버튼 리셋
+        function resetAppDemoButton(btn) {
+            btn.disabled = false;
+            btn.textContent = '📱 앱 스크린샷 수집하기';
+        }
+
+        // 모바일 플로우 캡처 관련 함수들
+        
+        // 모바일 시나리오 목록 로드
+        async function loadMobileScenarios() {
+            try {
+                const response = await fetch('/api/mobile/scenarios');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const select = document.getElementById('scenarioSelect');
+                    select.innerHTML = '<option value="">시나리오를 선택하세요...</option>';
+                    
+                    data.scenarios.forEach(scenario => {
+                        const option = document.createElement('option');
+                        option.value = scenario.id;
+                        option.textContent = `${scenario.name} (${scenario.stepsCount}단계)`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('시나리오 로드 실패:', error);
+            }
+        }
+
+        // 모바일 플로우 캡처 시작
+        async function startMobileFlowCapture() {
+            const platform = document.getElementById('platformSelect').value;
+            const scenarioId = document.getElementById('scenarioSelect').value;
+            const appPackage = document.getElementById('appPackageInput').value.trim();
+            const btn = document.getElementById('mobileFlowBtn');
+            const result = document.getElementById('mobileFlowResult');
+            
+            if (!scenarioId) {
+                alert('플로우 시나리오를 선택해주세요.');
+                return;
+            }
+
+            // 이전 결과 초기화
+            resetMobileFlowResult();
+            
+            btn.disabled = true;
+            btn.textContent = '🎬 앱 플로우 캡처 중...';
+            
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            
+            // 요청 데이터 구성
+            const requestData = {
+                platform,
+                scenarioId
+            };
+            
+            if (appPackage) {
+                if (platform === 'android') {
+                    requestData.appPackage = appPackage;
+                } else {
+                    requestData.bundleId = appPackage;
+                }
+            }
+            
+            result.innerHTML = `
+                <div class="demo-status-card running">
+                    <strong>🎬 모바일 앱 플로우 캡처 시작됨</strong><br>
+                    플랫폼: <code>${platform.toUpperCase()}</code><br>
+                    시나리오: <code>${scenarioId}</code><br>
+                    상태: 디바이스 연결 중...<br>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 5%"></div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/mobile/capture', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    console.log('모바일 플로우 캡처 시작:', data.jobId);
+                    monitorMobileFlowCapture(data.jobId);
+                } else {
+                    showMobileFlowError('캡처 시작 실패', data.error || '알 수 없는 오류가 발생했습니다.');
+                    resetMobileFlowButton(btn);
+                }
+            } catch (error) {
+                console.error('모바일 플로우 캡처 API 오류:', error);
+                showMobileFlowError('API 요청 실패', '서버와의 통신 중 오류가 발생했습니다.');
+                resetMobileFlowButton(btn);
+            }
+        }
+
+        // 모바일 플로우 캡처 모니터링
+        async function monitorMobileFlowCapture(jobId) {
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`/api/mobile/status/${jobId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const job = data.job;
+                        
+                        if (job.status === 'completed') {
+                            // 결과 조회
+                            const resultResponse = await fetch(`/api/mobile/result/${jobId}`);
+                            const resultData = await resultResponse.json();
+                            
+                            if (resultData.success) {
+                                showMobileFlowSuccess(resultData.result, jobId);
+                                resetMobileFlowButton(document.getElementById('mobileFlowBtn'));
+                            } else {
+                                showMobileFlowError('결과 조회 실패', resultData.error);
+                                resetMobileFlowButton(document.getElementById('mobileFlowBtn'));
+                            }
+                        } else if (job.status === 'failed') {
+                            showMobileFlowError('플로우 캡처 실패', job.error || '알 수 없는 오류가 발생했습니다.');
+                            resetMobileFlowButton(document.getElementById('mobileFlowBtn'));
+                        } else {
+                            // 진행 중 - 상태 업데이트
+                            updateMobileFlowProgress(job);
+                            setTimeout(checkStatus, 3000); // 3초 후 재확인
+                        }
+                    } else {
+                        showMobileFlowError('상태 확인 실패', data.error);
+                        resetMobileFlowButton(document.getElementById('mobileFlowBtn'));
+                    }
+                } catch (error) {
+                    console.error('상태 확인 오류:', error);
+                    showMobileFlowError('상태 확인 오류', '서버와의 통신 중 오류가 발생했습니다.');
+                    resetMobileFlowButton(document.getElementById('mobileFlowBtn'));
+                }
+            };
+            
+            // 첫 번째 상태 확인
+            setTimeout(checkStatus, 2000);
+        }
+
+        // 모바일 플로우 진행 상태 업데이트
+        function updateMobileFlowProgress(job) {
+            const result = document.getElementById('mobileFlowResult');
+            const progressFill = result.querySelector('.progress-fill');
+            
+            if (progressFill) {
+                progressFill.style.width = `${job.progress || 50}%`;
+            }
+            
+            let statusText = '모바일 앱 플로우 캡처 중...';
+            if (job.status === 'connecting') {
+                statusText = '디바이스 연결 중...';
+            } else if (job.status === 'capturing') {
+                statusText = '플로우 캡처 진행 중...';
+            }
+            
+            const statusCard = result.querySelector('.demo-status-card strong');
+            if (statusCard) {
+                statusCard.innerHTML = `🎬 ${statusText} (${job.progress || 50}%)`;
+            }
+        }
+
+        // 모바일 플로우 결과 초기화
+        function resetMobileFlowResult() {
+            const result = document.getElementById('mobileFlowResult');
+            result.style.display = 'none';
+            result.className = 'demo-result-container';
+            result.innerHTML = '';
+            
+            ensureProperPosition(result);
+        }
+
+        // 모바일 플로우 에러 표시
+        function showMobileFlowError(title, message) {
+            const result = document.getElementById('mobileFlowResult');
+            
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            result.innerHTML = `
+                <div class="demo-status-card error">
+                    <strong>❌ ${title}</strong><br>
+                    ${message}<br><br>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #6366f1;">💡 문제 해결 가이드</summary>
+                        <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 12px;">
+                            <strong>확인사항:</strong><br>
+                            1. Appium 서버가 실행 중인지 확인 (appium 명령어)<br>
+                            2. Android: USB 디버깅이 활성화되고 디바이스가 연결되었는지 확인<br>
+                            3. iOS: 시뮬레이터가 실행되고 있는지 확인<br>
+                            4. 대상 앱이 디바이스에 설치되어 있는지 확인<br>
+                            5. 디바이스가 잠금 해제 상태인지 확인
+                        </div>
+                    </details>
+                    <div class="demo-actions">
+                        <button onclick="resetMobileFlowResult()" class="btn-secondary">
+                            다시 시도하기
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 모바일 플로우 성공 결과 표시
+        function showMobileFlowSuccess(flowResult, jobId) {
+            const result = document.getElementById('mobileFlowResult');
+            
+            ensureProperPosition(result);
+            
+            result.style.display = 'block';
+            result.className = 'demo-result-container demo-result-active';
+            
+            const screenshots = flowResult.screenshots || [];
+            
+            result.innerHTML = `
+                <div class="demo-status-card success">
+                    <strong>✅ 모바일 앱 플로우 캡처 완료!</strong><br>
+                    <strong>🎬 시나리오:</strong> ${flowResult.scenario || '커스텀'}<br>
+                    <strong>📱 플랫폼:</strong> ${flowResult.platform?.toUpperCase() || 'Unknown'}<br>
+                    <strong>📸 캡처된 단계:</strong> ${screenshots.length}개<br>
+                    <strong>📱 디바이스:</strong> ${flowResult.deviceId || '정보 없음'}<br>
+                    
+                    <div class="demo-actions">
+                        <button onclick="downloadFile('/api/export/mobile-pdf/${jobId}', 'PDF')" class="btn-download">
+                            📄 플로우 PDF 다운로드
+                        </button>
+                        <button onclick="downloadFile('/api/export/mobile-zip/${jobId}', '폴더')" class="btn-download">
+                            📁 플로우 파일 다운로드
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 모바일 플로우 버튼 리셋
+        function resetMobileFlowButton(btn) {
+            btn.disabled = false;
+            btn.textContent = '🎬 앱 플로우 캡처 시작하기';
+        }
+    </script>
+</body>
+</html>
